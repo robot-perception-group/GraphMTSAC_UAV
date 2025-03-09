@@ -49,3 +49,26 @@ python run.py agent=MTSAC wandb_log=False env=Quadcopter env.num_envs=25  env.si
 wandb sweep sweep/mtsac_hyper.yml
 ```
 The experimental results are gathered in Wandb. 
+
+
+# Real World Experiment:
+- install ardupilot (https://ardupilot.org)
+
+- Modify the model path in 'script/cpp_generator_rmagraphnet.py' and execute firmware generator
+```console
+python3 script/cpp_generator_rmagraphnet.py
+```
+this will generate a file 'NN_Parameters.h'.
+
+- Move this file to AC_CustomControl folder
+```console
+mv NN_Parameters.h AC_CustomControl/NN_Parameters.h
+```
+
+- Copy the entire AC_CustomControl folder and replace the Ardupilot AC_CustomControl folder. Use following command to compile ardupilot: 
+```console
+./waf configure --board Pixhawk6X copter --enable-custom-controller
+```
+
+- You will need to configure ardupilot to enable custom control: https://ardupilot.org/dev/docs/copter-adding-custom-controller.html
+
