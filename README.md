@@ -29,14 +29,14 @@ conda activate rlgpu
 
 - clone this repository to the workspace and install dependencies
 ```console
-git clone https://github.com/robot-perception-group/graphmtsac_uav.git
-pip install -r graphmtsac_uav/requirements.txt
+git clone https://github.com/robot-perception-group/GraphMTSAC_UAV.git
+pip install -r GraphMTSAC_UAV/requirements.txt
 ```
 
 # Run Agent: 
 - enter the RL workspace
 ```console
-cd graphmtsac_uav/
+cd GraphMTSAC_UAV/
 ```
 
 - start learning in 25 environments with agents available: SAC, MTSAC, RMAMTSAC
