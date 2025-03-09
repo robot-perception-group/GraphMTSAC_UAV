@@ -1,0 +1,35 @@
+program: run.py
+name: exp3_mtsac_policy_architecture
+method: grid
+metric:
+  goal: maximize
+  name: reward/eval
+
+parameters:
+  agent.policy_net_kwargs.hidden_dim:
+    values: [8]
+  agent.policy_net_kwargs.num_layers:
+    values: [2]
+  agent.policy_net_kwargs.use_resnet:
+    values: [False]
+  agent.policy_net_kwargs.use_layernorm:
+    values: [False]
+  agent.policy_net_kwargs.architecture:
+    values: ["parallel","compositional","graph"]
+  env.dynamics.model_frame:
+    values: ["f450"]
+  env.dynamics.enable_wind:
+    values: [False]
+  env.dynamics.domain_rand:
+    values: [False]
+  seed:
+    values: [123,456,789]
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - agent=MTSAC
+  - wandb_log=True
+  - env=Quadcopter
+  - env.num_envs=1024

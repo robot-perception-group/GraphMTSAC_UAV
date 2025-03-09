@@ -1,0 +1,42 @@
+program: run.py
+name: rmamtsac_phase1_hyper
+method: grid
+metric:
+  goal: maximize
+  name: reward/eval
+
+parameters:  
+  agent.load_model:
+    values: [False]
+  agent.RMA:
+    values: [False]
+  agent.phase:
+    values: [1]
+  agent.latent_dim:
+    values: [2]
+  agent.policy_net_kwargs.architecture:
+    values: ["graph"]
+  agent.policy_net_kwargs.hidden_dim:
+    values: [8]
+  agent.policy_net_kwargs.graph.embedding_dim:
+    values: [8]
+  agent.encoder.num_layers:
+    values: [2, 4]
+  agent.encoder.use_resnet:
+    values: [True, False]
+  env.dynamics.domain_rand:
+    values: [True]
+  env.dynamics.enable_wind:
+    values: [False]
+  seed:
+    values: [123, 456, 789]
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - agent=RMAMTSAC
+  - wandb_log=True
+  - env=Quadcopter
+  - env.num_envs=1024
+  - agent.save_model=True

@@ -1,0 +1,114 @@
+name: "rmamtsac"
+
+# experiment parameters
+eval: True
+eval_interval: 3  # evaluate mode every X iterations
+eval_episodes: 1
+save_model: True  # save model after evaluation
+save_all: False
+save_best: True
+log_interval: 10 # log data interval to wandb every X simulation steps
+log_path: "logs/"  # config and model log path
+log_task_returns: False # log all tasks' returns on wandb
+load_model: False
+model_path: "rmamtsac/Quadcopter/2025-02-23-10-18-01/phase1_best/"
+
+# RMA break training into two stage to obtain a feature extractor and an adaptor
+RMA: False # block phase 2 if False
+phase: 1 # 1: extractor. 2: adaptor
+adaptor_lr: 0.00005
+latent_dim: 2 # an integer or false. if false, default: (num_env_latent)//2 
+
+# hyper parameters
+entropy_tuning: True
+alpha: 1.
+alpha_lr: 3e-4
+lr: 0.0025
+policy_lr: 0.0005
+gamma: 0.999
+tau: 5e-3
+td_target_update_interval: 1
+updates_per_step: 1
+reward_scale: 1.0
+grad_clip: 5.0
+
+# curriculum learning
+curriculum: False
+initial_difficulty: 0.2
+difficulty_stepsize: 0.02
+
+# target entropy ratio for entropy tuning
+target_entropy_ratio: 0.0
+
+# weight decay for the policy and value network
+weight_decay: 0.0000025
+
+# improve action temporal and spatial smoothness 
+# temporal smoothness: consecutive actions should be similar
+# spatial smoothness: similar state should produce similar actions 
+use_action_smoothness_loss: True
+action_smooth_params: [0.000005, 0.000001] # [temporal, spatial] 
+
+value_net_kwargs:
+    architecture: "plain" # [plain, parallel, compositional]
+    num_networks: 2 
+    hidden_dim: 128 
+    num_layers: 4
+    use_resnet: True
+    use_layernorm: False
+    compile_method: "trace" # [trace, compile, None]
+
+    # only useful for compositional architecture
+    composition: 
+        context_dim: 3 # number of routing modules
+        use_comp_layer: True
+        state_independent_context: False
+
+    # only useful for parallel architecture
+    parallel: 
+        context_dim: 3 # number of experts
+        state_independent_context: False
+
+
+policy_net_kwargs: 
+    architecture: "graph" # [plain, parallel, compositional, graph]
+    hidden_dim: 12
+    num_layers: 2
+    use_resnet: False
+    use_layernorm: False
+    compile_method: "trace" # [trace, compile, None]
+
+    # only useful for compositional architecture
+    composition: 
+        context_dim: 3 # number of routing modules
+        use_comp_layer: True
+        state_independent_context: False
+
+    # only useful for parallel architecture
+    parallel: # parallel policy network or mixture of experts
+        context_dim: 3 # number of experts
+        state_independent_context: False
+
+    # only useful for graph architecture
+    graph: 
+        embedding_dim: 8
+        init_positive_edge_weight: 0.5
+        init_negative_edge_weight: -0.5
+
+
+encoder_net_kwargs: 
+    num_layers: 4 # minimum 2 layers,  bug: currently only 2 layers are supported XXXX
+    hidden_dim: 64
+    use_resnet: True
+    use_layernorm: True
+    compile_method: "trace" # [trace, compile, None]
+
+adaptor_net_kwargs: 
+    num_tcn_layers: 1 # number of temporal convolution layers
+    kernel_size: 8 # temporal convolution kernel size
+    use_fcn: True # use fully connected layer
+    num_layers: 4 # number of fcn layers
+    hidden_dim: 16 # fcn size
+    use_resnet: False 
+    use_layernorm: False
+    compile_method: "trace" # [trace, compile, None]

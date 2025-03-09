@@ -1,0 +1,31 @@
+program: run.py
+name: sac_hyper
+method: grid
+metric:
+  goal: maximize
+  name: reward/eval
+
+parameters:
+  agent.policy_net_kwargs.hidden_dim:
+    values: [8, 12, 16, 20, 24]
+  agent.policy_net_kwargs.architecture:
+    values: ["plain"]
+  agent.graph.embedding_dim:
+    values: [4, 6, 8, 10, 12]
+  env.dynamics.model_frame:
+    values: ["f450"]
+  env.dynamics.enable_wind:
+    values: [False]
+  env.dynamics.domain_rand:
+    values: [False]
+  seed:
+    values: [123, 456, 789]
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - agent=MTSAC
+  - wandb_log=True
+  - env=Quadcopter
+  - env.num_envs=1024

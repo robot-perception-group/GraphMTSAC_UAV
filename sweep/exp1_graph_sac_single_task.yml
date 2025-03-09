@@ -1,0 +1,33 @@
+program: run.py
+name: exp1_sac_single_task
+method: grid
+metric:
+  goal: maximize
+  name: reward/eval
+
+parameters:
+  agent.policy_net_kwargs.architecture:
+    values: ["graph"]
+  agent.policy_net_kwargs.num_layers:
+    values: [1]
+  agent.policy_net_kwargs.use_resnet:
+    values: [False]
+  agent.policy_net_kwargs.use_layernorm:
+    values: [False]
+  env.dynamics.model_frame:
+    values: ["f450"]
+  env.task.taskSet.train:
+    values: ["SingleSet"]
+  env.task.taskSet.eval:
+    values: ["SingleSet"]
+  seed:
+    values: [123, 456, 789]
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - agent=SAC
+  - wandb_log=True
+  - env=Quadcopter
+  - env.num_envs=1024

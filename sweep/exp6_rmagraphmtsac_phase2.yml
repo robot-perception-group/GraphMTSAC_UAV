@@ -1,0 +1,48 @@
+program: run.py
+name: rmamtsac_phase2_hyper
+method: grid
+metric:
+  goal: maximize
+  name: phase2_reward/eval
+
+parameters:  
+  agent.load_model:
+    values: [True]
+  agent.model_path:
+    values: ["rmamtsac/Quadcopter/[DATE]/phase1_best/"]
+  agent.RMA:
+    values: [True]
+  agent.phase:
+    values: [2]
+  agent.adaptor_lr:
+    values: [0.00002, 0.00004, 0.00008]
+  agent.latent_dim:
+    values: [2]
+  agent.adaptor_net_kwargs.num_tcn_layers:
+    values: [2, 4]
+  agent.adaptor_net_kwargs.kernel_size:
+    values: [10, 25, 50]
+  agent.adaptor_net_kwargs.use_fcn:
+    values: [True]
+  agent.adaptor_net_kwargs.num_layers:
+    values: [2, 4]
+  agent.adaptor_net_kwargs.hidden_dim:
+    values: [16, 64]
+  env.dynamics.domain_rand:
+    values: [True]
+  env.dynamics.enable_wind:
+    values: [False]
+  buffer.stack_size:
+    values: [25, 50, 100, 200]
+  seed:
+    values: [456]
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - agent=RMAMTSAC
+  - wandb_log=True
+  - env=Quadcopter
+  - env.num_envs=1024
+  - agent.save_model=True

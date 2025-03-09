@@ -1,0 +1,15 @@
+capacity : 1000000 
+mini_batch_size : 512
+min_n_experience : 1024
+multi_step : 1 # legacy, not implemented
+
+# choose prioritized_replay or framestacked_replay
+# note: prioritized_replay has slow runtime, not recommend
+prioritized_replay : False
+alpha : 0.6 
+beta : 0.4 
+eps : 1e-8
+
+framestacked_replay: True
+stack_size: 50
+create_stack: True

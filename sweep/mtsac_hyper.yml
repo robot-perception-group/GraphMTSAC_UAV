@@ -1,0 +1,39 @@
+program: run.py
+name: mtsac_hyper
+method: grid
+metric:
+  goal: maximize
+  name: reward/eval
+
+parameters:
+  agent.use_action_smoothness_loss:
+    values: [True, False]
+  agent.action_smooth_params:
+    values: [[0.000005, 0.000001]]
+  agent.target_entropy_ratio:
+    values: [0]
+  agent.weight_decay:
+    values: [0.000001]
+  agent.policy_net_kwargs.hidden_dim:
+    values: [4, 6, 8, 10, 12]
+  agent.policy_net_kwargs.architecture:
+    values: ["graph"]
+  agent.graph.embedding_dim:
+    values: [4, 6, 8, 10, 12]
+  env.dynamics.model_frame:
+    values: ["f450"]
+  env.dynamics.enable_wind:
+    values: [False]
+  env.dynamics.domain_rand:
+    values: [False]
+  seed:
+    values: [123, 456, 789]
+
+command:
+  - ${env}
+  - python
+  - ${program}
+  - agent=MTSAC
+  - wandb_log=True
+  - env=Quadcopter
+  - env.num_envs=1024
