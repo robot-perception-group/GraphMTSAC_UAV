@@ -29,23 +29,23 @@ conda activate rlgpu
 
 - clone this repository to the workspace and install dependencies
 ```console
-git clone https://github.com/robot-perception-group/adaptive_agent.git
-pip install -r adaptive_agent/requirements.txt
+git clone https://github.com/robot-perception-group/graphmtsac_uav.git
+pip install -r graphmtsac_uav/requirements.txt
 ```
 
 # Run Agent: 
 - enter the RL workspace
 ```console
-cd adaptive_agent/
+cd graphmtsac_uav/
 ```
 
-- start learning in 25 environments with agents available: SAC, COMP, RMACOMP, PID
+- start learning in 25 environments with agents available: SAC, MTSAC, RMAMTSAC
 ```
-python run.py agent=COMP wandb_log=False env=BlimpRand env.num_envs=25  env.sim.headless=False
+python run.py agent=MTSAC wandb_log=False env=Quadcopter env.num_envs=25  env.sim.headless=False agent.save_model=False
 ```
 
-- The experiments are stored in the sweep folder. For example, hyperparameter tuning for the composition agent
+- The experiments are stored in the sweep folder. For example, hyperparameter tuning for the mtsac agent
 ```console
-wandb sweep sweep/comp_hyper.yml
+wandb sweep sweep/mtsac_hyper.yml
 ```
 The experimental results are gathered in Wandb. 
