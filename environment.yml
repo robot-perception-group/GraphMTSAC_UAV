@@ -8,13 +8,15 @@ channels:
 dependencies:
   - python=3.8.20
   - pip
-  - pytorch
-  - torchvision
-  - torchaudio
-  - cudatoolkit=11.1       # Match this to Isaac Gym and PyTorch compatibility
+  - pytorch=2.0.1
+  - torchaudio=2.0.2
+  - torchvision=0.15.2
+  - cudatoolkit=11.1
   - scipy>=1.5.0
   - pyyaml>=5.3.1
   - tensorboard>=2.2.1
+  - hydra-core>=1.1.0
+  - omegaconf>=2.1.0
+  - gym
   - pip:
-      - -e .               # Optional: install your own project as a package (needs pyproject.toml or setup.py)
-      - -r requirements.txt  # Include additional pip packages you list there
+      - -r requirements.txt

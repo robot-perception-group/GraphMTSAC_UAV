@@ -63,6 +63,12 @@ Update the Isaac Gym environment with this project's dependencies:
 conda env update --file GraphMTSAC_UAV/environment.yml
 ```
 
+If needed, install any remaining pip dependencies manually:
+```bash
+pip install -e GraphMTSAC_UAV
+pip install -r GraphMTSAC_UAV/requirements.txt
+```
+
 > ✅ This will install all required Python packages, including `wandb`, `gym`, and any others listed in `requirements.txt`.
 
 ---
