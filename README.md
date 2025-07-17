@@ -95,7 +95,10 @@ wandb sweep sweep/mtsac_hyper.yml
 
 1. Install ArduPilot firmware (see: https://ardupilot.org/dev/docs/building-setup-linux.html)
 
-2. Generate the model parameter header from your trained neural network:
+2. Configure the autopilot to use your custom controller:  
+👉 https://ardupilot.org/dev/docs/copter-adding-custom-controller.html
+
+3. Generate the model parameter header from your trained neural network:
 
 ```bash
 python3 script/cpp_generator_rmagraphnet.py
@@ -103,22 +106,20 @@ python3 script/cpp_generator_rmagraphnet.py
 
 This will generate the file `NN_Parameters.h`.
 
-3. Move the header into the custom ArduPilot folder:
+4. Move the header into the custom ArduPilot folder:
 
 ```bash
 mv NN_Parameters.h AC_CustomControl/NN_Parameters.h
 ```
 
-4. Replace ArduPilot's original `AC_CustomControl` directory with this modified one.
+5. Replace ArduPilot's original `AC_CustomControl` directory with this modified one.
 
-5. Compile ArduPilot with the custom controller:
+6. Compile ArduPilot with the custom controller:
 
 ```bash
 ./waf configure --board Pixhawk6X copter --enable-custom-controller
 ```
 
-6. Configure the autopilot to use your custom controller:  
-👉 https://ardupilot.org/dev/docs/copter-adding-custom-controller.html
 
 ---
 
@@ -138,4 +139,14 @@ GraphMTSAC_UAV/
 ├── play.py              # Main testing point
 ├── requirements.txt
 ├── environment.yml
+```
+
+## Cite (The IROS Verion Comes Later)
+```
+@article{liu2025multitask,
+  title={Multitask Reinforcement Learning for Quadcopter Attitude Stabilization and Tracking using Graph Policy},
+  author={Liu, Yu Tang and Vale, Afonso and Ahmad, Aamir and Ventura, Rodrigo and Basiri, Meysam},
+  journal={arXiv preprint arXiv:2503.08259},
+  year={2025}
+}
 ```
