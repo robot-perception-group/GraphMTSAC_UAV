@@ -201,10 +201,10 @@ dynamics:
   apply_gyroscopic_torque: False # This doesn't matter in low velocity buy may increase computation.
   apply_rolling_moment: True
 
-  enable_wind: False 
+  enable_wind: True 
   wind_to_velocity_ratio: [10, 10, 1] # wind velocity 
 
-  domain_rand: False 
+  domain_rand: True 
   latent_range_typeA: [0.67, 1.5] # C_T, C_Q, time_constant
   latent_range_typeB: [0.5, 2.0] # C_M
   latent_range_typeC: [0.8, 1.2] # sim_to_real_ratio, thrust_imbalance, hover_state
@@ -256,6 +256,27 @@ graph:
 
 # only useful for graph MTSAC
 graph_with_task:
+  # Action index: a_r[0], a_p[1], a_y[2]
+  # State index: roll[3], pitch[4], yaw[5], ω_r[6], ω_p[7], ω_y[8]
+  # Goal index: g_r[9], g_p[10], g_y[11]
+  # Task index: 'angle_rp'[12], 'angle_rp_cd'[13], 'angle_y'[14], 'angle_y_cd'[15], 'low_spin_rp'[16], 'low_spin_y'[17], 'act_smooth'[18]
+  # Environment index: 'e0'[19], 'e1'[20] --> only used with RMA
+  positive_edge: # store positive connection between states and actions
+    {
+      0: [0,3,6,12,13,16,18], # roll
+      1: [1,4,7,12,13,16,18], # pitch
+      2: [2,5,8,14,15,17,18], # yaw
+    }
+  negative_edge: # store negative connection between states and actions
+    {
+      0: [9], # roll
+      1: [10], # pitch
+      2: [11], # yaw
+    }
+
+
+# only useful for graph RMAMTSAC
+graph_with_task_env:
   # Action index: a_r[0], a_p[1], a_y[2]
   # State index: roll[3], pitch[4], yaw[5], ω_r[6], ω_p[7], ω_y[8]
   # Goal index: g_r[9], g_p[10], g_y[11]

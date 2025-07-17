@@ -66,7 +66,7 @@ class SACAgent(IsaacAgent):
             neg_edge_w = args["init_negative_edge_weight"]
 
             # create initial adjacency matrix
-            num_nodes = self.observation_dim 
+            num_nodes = self.env.num_state + self.env.num_goal
             adjacency_table = torch.zeros(num_nodes, num_nodes)
 
             # fill adjacency matrix with initial weights
@@ -83,6 +83,7 @@ class SACAgent(IsaacAgent):
                         adjacency_table[int(action_node)][int(state_node)] = neg_edge_w
                     else:
                         print("[Warning] state node out of range: ", state_node)
+                        print("RMA + SAC is not included at the moment.")
 
             self.policy = GraphGaussianPolicyNetwork(
                     observation_dim=self.observation_dim,

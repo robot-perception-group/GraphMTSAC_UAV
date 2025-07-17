@@ -1,5 +1,4 @@
 from .tailsitter import Tailsitter
-from .blimp_rand import BlimpRand
 from .quadcopter import Quadcopter
 
 
@@ -7,5 +6,4 @@ from .quadcopter import Quadcopter
 env_map = {
     "Tailsitter": Tailsitter,
     "Quadcopter": Quadcopter,
-    "BlimpRand": BlimpRand,
 }

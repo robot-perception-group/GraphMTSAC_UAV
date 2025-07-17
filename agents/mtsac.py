@@ -181,14 +181,14 @@ class MultitaskSACAgent(MultitaskAgent):
                     if state_node < num_nodes:
                         adjacency_table[int(action_node)][int(state_node)] = pos_edge_w
                     else:
-                        print("[Warning] state node out of range: ", state_node)
+                        print("[Warning] state node out of range, likely because RMA is not enabled: ", state_node)
 
             for action_node, state_node_list in negative_edge.items():
                 for state_node in state_node_list:
                     if state_node < num_nodes:
                         adjacency_table[int(action_node)][int(state_node)] = neg_edge_w
                     else:
-                        print("[Warning] state node out of range: ", state_node)
+                        print("[Warning] state node out of range, likely because RMA is not enabled: ", state_node)
 
             self.policy = MTGraphGaussianPolicyNetwork(
                 observation_dim=observation_dim,

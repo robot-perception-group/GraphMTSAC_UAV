@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Debug run.py",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/run.py",
+      "console": "integratedTerminal",     // or "externalTerminal"
+      "args": [
+        "agent=SAC",
+        "wandb_log=False",
+        "env=Quadcopter",
+        "env.num_envs=50",
+        "env.sim.headless=True",
+        "agent.save_model=False"
+      ],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    }
+  ]
+}

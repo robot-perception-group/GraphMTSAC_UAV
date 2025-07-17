@@ -148,6 +148,7 @@ class ParallelGaussianPolicyNetwork(BaseGaussianPolicyNetwork):
         use_layernorm=False,
         use_resnet=False,
         compile_method="trace",
+        **kwargs,
     ) -> None:
         super().__init__()
         self.model = ParallelGaussianPolicyNetworkBuilder(

@@ -14,7 +14,7 @@ load_model: False
 model_path: "rmamtsac/Quadcopter/2025-02-23-10-18-01/phase1_best/"
 
 # RMA break training into two stage to obtain a feature extractor and an adaptor
-RMA: False # block phase 2 if False
+RMA: True # block phase 2 if False
 phase: 1 # 1: extractor. 2: adaptor
 adaptor_lr: 0.00005
 latent_dim: 2 # an integer or false. if false, default: (num_env_latent)//2 
@@ -91,7 +91,8 @@ policy_net_kwargs:
 
     # only useful for graph architecture
     graph: 
-        embedding_dim: 8
+        num_gcn_layers: 1 
+        embedding_dim: 4
         init_positive_edge_weight: 0.5
         init_negative_edge_weight: -0.5
 

@@ -1,0 +1,20 @@
+name: graphmtsac
+channels:
+  - nvidia
+  - pytorch
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.8.20
+  - pip
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cudatoolkit=11.1       # Match this to Isaac Gym and PyTorch compatibility
+  - scipy>=1.5.0
+  - pyyaml>=5.3.1
+  - tensorboard>=2.2.1
+  - pip:
+      - -e .               # Optional: install your own project as a package (needs pyproject.toml or setup.py)
+      - -r requirements.txt  # Include additional pip packages you list there
