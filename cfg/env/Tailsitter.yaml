@@ -1,0 +1,223 @@
+# ======== Asset ========
+# Bodies:
+#   0: 'base'
+#   1: 'leg1'
+#   2: 'leg2'
+#   3: 'leg3'
+#   4: 'leg4'
+#   5: 'wing_left'
+#   6: 'winglet_left'
+#   7: 'wing_right'
+#   8: 'winglet_right'
+#   9: 'motor1_link' top right ccw
+#  10: 'motor2_link' low left ccw
+#  11: 'motor3_link' top left cw
+#  12: 'motor4_link' low right cw
+# DOFs:
+#   0: 'motor1_joint' (Revolute)
+#   1: 'motor2_joint' (Revolute)
+#   2: 'motor3_joint' (Revolute)
+#   3: 'motor4_joint' (Revolute)
+
+env_name: Tailsitter
+ 
+num_envs: 1024
+
+total_episodes: 100
+max_episode_length: 500
+
+envSpacing: 1.25
+clipObservations: 5.0
+clipActions: 1.0
+
+goal:
+  visualize_goal: False
+
+  goal_type: "random" # [fix, random]
+  position_target_type: "center" # [waypoints, center]
+  wps_shape: "circle" # waypoints shape, only matter if position_target_type is waypoints
+  trigger_dist: 1 # distance to trigger a waypoint, only matter if position_target_type is waypoints
+  # below only matter if goal_type is random
+  rand_vel: False
+  rand_velnorm: False
+  rand_ang: True
+  rand_angvel: False
+  # the maximum value from random goal 
+  lim_vel: 25 
+  lim_ang: [3.1416,3.1416,3.1416]
+  lim_angvel: [1,1,1]
+  # below only matters if rand_X is False or goal type is fix
+  target_velnorm: 19 # target forward velocity 
+  target_ang: [0,0,0] 
+  target_angvel: [0,0,0] # body frame
+
+feature:
+  # features
+  # names: ['vforward', 'roll', 'pitch', 'yaw', 'uprightness', 'levelness', 'low_spin', 'low_v']
+  names: ['uprightness', 'low_spin', 'low_v']
+  verbose: False
+
+task:
+  verbose: False
+
+  difficulty: 0.3 # range of the initial robot and goal state [0, 1], can be overwritten by agent/curriculum
+  sampling_bound: 0.7 # reduce sampling range to prevent constant reset of env 
+  adaptive_task: False # Update task ratio based on reward. The more reward the less likely for a task to be sampled.
+
+  spawn_height: 0 # spawn height of the vehicle and serves as target position for many tasks
+  max_height: 15 # max_height of the flight zone
+  hover_zone: 15 # hover zone for the hover task
+  orbit_distance: 70 # orbiting distance to the target position
+  pos_lim: 15.0 # radius of the flight zone
+  vel_lim: 10.0 # [m/s]
+  avel_lim: 12.4 # 4*pi [rad/s]
+  rand_rb_pos: False
+  rand_rb_vel: True
+  rand_rb_ang: True
+  rand_rb_avel: True
+  rand_rb_actuator: True
+  init_pos: [0,0,0]  # only matter if rand_rb_pos is False, global frame, z w.r.t spawn_height
+  init_vel: [0,0,0]  # only matter if rand_rb_vel is False, global frame
+  init_ang: [0,0,0]  # only matter if rand_rb_ang is False
+  init_avel: [0,0,0] # only matter if rand_rb_avel is False, global frame
+
+  taskSet: # allow addition by comma, e.g. "AttSet, QRSet"
+    # train: "AttSet, FWAttSet, TranSet, PoseRecoverSet" # [AttSet, FWAttSet, TranSet, PoseRecoverSet], 
+    train: "AttSet, QRStabilizeSet, PoseRecoverSet" # [AttSet, FWAttSet, TranSet, PoseRecoverSet], 
+    eval: "EvalSet" # [AttEvalSet, QREvalSet]
+
+    # each taskSet has different goal range, robot initial state, and reset condition, find them in taskset.py
+    # if conditions are not defined, using the default random goal, robot state, and reset condition
+    # we use this mark "*" to note whether a taskset has sample and reset condition defined
+    # AttSet: [ # follow random target from random init state
+    #   [1,0,1,1, 0,0, .5,0], # attitude control  
+    #   [1,0,.3,.3, 0,0, .2,0], # attitude control  
+    # ]
+    # QRStabilizeSet: [ # "*" maintain QR pose from random neutral state
+    #   [0,0,0,0, 1,0, 1,1], # attitude control  
+    #   [0,0,0,0, 1,0, .2,.2], # attitude control  
+    #   [0,0,0,0, .2,0, 1,.2], # attitude control  
+    #   [0,0,0,0, .2,0, .2,.1], # attitude control  
+    # ]
+    # PoseRecoverSet: [  # "*" target QR pose from random init state
+    #   # [0,1,1,0, 0,0, .5,0], # upright control  
+    #   [0,0,0,0, 1,0, 1,1], # attitude control  
+    #   [0,0,0,0, 1,0, .2,.2], # attitude control  
+    #   [0,0,0,0, .2,0, 1,.2], # attitude control  
+    #   [0,0,0,0, .2,0, .2,.1], # attitude control  
+    # ]
+
+    # FWAttSet: [ # "*", follow FW target from FW init state
+    #   [1,0,1,1, 0,0, .5,0], # attitude control  
+    #   [1,0,.3,.3, 0,0, .2,0], # attitude control  
+    # ]
+    # TranSet: [ # "*", transition from upright to FW target 
+    #   [1,0,1,1, 0,0, .5,0], # attitude control  
+    #   [1,0,.3,.3, 0,0, .2,0], # attitude control  
+    # ]
+    
+    # AttEvalSet: [
+    #   [1,0,1,1, 0,0, .5,0], # attitude control  
+    #   [0,0,0,0, 1,0, .5,.5], # upright control  
+    # ]
+
+    # QREvalSet: [
+    #   [0,0,0,0, 1,0, 1,1], # attitude control  
+    #   [0,0,0,0, 1,0, .2,.2], # attitude control  
+    #   [0,0,0,0, .2,0, 1,.2], # attitude control  
+    #   [0,0,0,0, .2,0, .2,.1], # attitude control  
+    # ]
+
+    AttSet: [ 
+      [1, 1, 1], # attitude control  
+      [1, .1, .1], # attitude control  
+      [.1, 1, .1], # attitude control  
+      [.1, .1, 1], # attitude control  
+    ]
+
+    QRStabilizeSet: [ # "*" maintain QR pose from random neutral state
+      [1, 1, 1], # attitude control  
+      [1, .1, .1], # attitude control  
+      [.1, 1, .1], # attitude control  
+      [.1, .1, 1], # attitude control  
+    ]
+    PoseRecoverSet: [ # "*" target QR pose from random init state
+      [1, 1, 1], # attitude control  
+      [1, .1, .1], # attitude control  
+      [.1, 1, .1], # attitude control  
+      [.1, .1, 1], # attitude control  
+    ]
+
+    EvalSet: [
+      [1, 1, 1],  
+      [1, .1, .1], 
+      [.1, 1, .1], 
+      [.1, .1, 1], 
+    ]
+
+dynamics:
+  add_ground: False 
+
+  # rotors 
+  visualize_force: False
+  rotor_bodies: [9,10,11,12]
+  control_interface: "attitude" # rotors, attitude
+  hover_actuator: 0.33 # percentage of max_rotor_avel [0,1]
+  cw: [-1,-1,1,1]
+  C_T: 0.0000045
+  C_Q: 0.00000027
+  actuator_to_avel_ratio: 3100 # increase in rpm per sec: max rpm 3100 [rpm], rotor_init_avel: 1020 [rpm] 
+  smooth: 10.0 # [0-20, the smaller the smoother the rotors commands]
+
+  domain_rand: True
+  latent_range_typeA: [0.8, 1.2]
+  latent_range_typeB: [0.5, 2.0]
+
+  # aerodynamics
+  visualize_aeroforce: False
+  drag_bodies: [0, 5, 6, 7, 8] # base, wing_left, winglet_left, wing_right, winglet_right
+  area: [0.08, 0.05, 0.0068, 0.05, 0.0068]
+  alpha0: [0.13, 0.13, 0.0068, 0.13, 0.0068]
+  cla: [3.7, 3.7, 4.752798721, 3.7, 4.752798721]
+  cda: [0.06417112299, 0.06417112299, 0.6417112299, 0.06417112299, 0.6417112299] 
+  alphaStall: [0.3391428111, 0.3391428111, 0.3391428111, 0.3391428111, 0.3391428111]
+  claStall: [-3.85, -3.85, -3.85, -3.85, -3.85]
+  cdaStall: [-0.9233984055, -0.9233984055, -0.9233984055, -0.9233984055, -0.9233984055]
+  forward: [[0, 0, 1], 
+            [0, 0, 1], 
+            [0, 0, 1], 
+            [0, 0, 1], 
+            [0, 0, 1],] 
+  upward: [[-1, 0, 0],
+           [-1, 0, 0], 
+           [0, -1, 0], 
+           [-1, 0, 0], 
+           [0, 1, 0],]
+  rho: 1.2041
+
+sim:
+  sim_device: "cuda:0"
+  headless: True
+  compute_device_id: 0
+  graphics_device_id: 0
+
+  dt: 0.025
+  substeps: 1
+  up_axis: "z"
+  use_gpu_pipeline: True
+  gravity: [0.0, 0.0, -9.81]
+  physx:
+    num_threads: 4
+    solver_type: 1
+    use_gpu: True # set to False to run on CPU
+    num_position_iterations: 4
+    num_velocity_iterations: 0
+    contact_offset: 0.02
+    rest_offset: 0.001
+    bounce_threshold_velocity: 0.2
+    max_depenetration_velocity: 1000.0
+    default_buffer_size_multiplier: 5.0
+    max_gpu_contact_pairs: 1048576 # 1024*1024
+    num_subscenes: 4
+    contact_collection: 0 # 0: CC_NEVER (don't collect contact info), 1: CC_LAST_SUBSTEP (collect only contacts on last substep), 2: CC_ALL_SUBSTEPS (broken - do not use!)
+    
